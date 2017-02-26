@@ -2,6 +2,8 @@ var fs = require('fs');
 var path = require('path');
 
 var gulp = require('gulp');
+var connect = require('gulp-connect');
+var sass = require('gulp-sass');
 
 // Load all gulp plugins automatically
 // and attach them to the `plugins` object
@@ -170,3 +172,29 @@ gulp.task('build', function (done) {
 });
 
 gulp.task('default', ['build']);
+
+
+
+//定义一个HTTP服务器
+var connect = require('gulp-connect');
+gulp.task('serve', function() {
+//创建一个服务监听器，默认监听8080端口
+    connect.server({
+        root: 'src',
+        //默认端口8080
+        port: 3001,
+        livereload: true
+    });
+    gulp.watch('src/**/*.*', ['sass', 'reload']);
+});
+gulp.task('reload', function() {
+    gulp.src('src/**/*.*')
+        .pipe(connect.reload());
+});
+
+gulp.task('sass', function() {
+    gulp.src('src/scss/**/*.scss')
+        .pipe(sass())
+        .pipe(gulp.dest('src/css'));
+
+});
